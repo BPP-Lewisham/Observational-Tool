@@ -149,13 +149,6 @@ Survey
     .register("shouldAllowRows", shouldAllowRows);
 
 survey
-    .onValueChanged
-    .add(function(sender, options) {
-        console.log(sender)
-        console.log(options)
-});
-
-survey
     .onComplete
     .add(function (result) {
         res = result.data
