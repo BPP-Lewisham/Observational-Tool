@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Observational Study Tool</title>
+        
+        <meta name="viewport" content="width=device-width"/>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://npmcdn.com/zone.js/dist/zone-evergreen"></script>
+        <script src="https://npmcdn.com/core-js@2.6.5/client/shim.min.js"></script>
+        <script src="https://npmcdn.com/rxjs@5.0.0-beta.6/bundles/Rx.umd.js"></script>
+        <script src="https://npmcdn.com/@angular/core@2.0.0-rc.5/bundles/core.umd.js"></script>
+        <script src="https://npmcdn.com/@angular/common@2.0.0-rc.5/bundles/common.umd.js"></script>
+        <script src="https://npmcdn.com/@angular/compiler@2.0.0-rc.5/bundles/compiler.umd.js"></script>
+        <script src="https://npmcdn.com/@angular/platform-browser@2.0.0-rc.5/bundles/platform-browser.umd.js"></script>
+        <script src="https://npmcdn.com/@angular/platform-browser-dynamic@2.0.0-rc.5/bundles/platform-browser-dynamic.umd.js"></script>
+        <script src="https://surveyjs.azureedge.net/1.7.3/survey.angular.js"></script>
+        <link href="https://surveyjs.azureedge.net/1.7.3/modern.css" type="text/css" rel="stylesheet"/>
+        
+        <body>
+            Disable Zone: <input type="checkbox" id="checkZone" onclick=zoneToggle()>
+            <label id="status"style="margin-left: 25px">Connectivity</label>
+            <div id="auth-status" style="display: inline; padding-left: 25px"></div><hr>
+            <label id="toSync"style="margin-left: 25px">Enteries to be synced: Loading</label>
+            <button id="send-data-button"onclick="sendData()"style="margin-left: 25px">Sync</button>
+            <div id="auth-status-2" style="display: inline; padding-left: 25px"></div><hr>
+            <input type="image" id="zone" src="zone.PNG" width="380" height="335">
+            <h2>Please click on the map below to select the location of the observed activity</h2>
+            <p></p>
+        </body>
+    </head>
+
+    <body>
+        <script>
+            var latitude = "none", longitude = "none"
+            var reload = false;
+            //Should be initialized to the top of the page
+            //Look into this a little more
+            var lastScrollTop = 0;
+            var errorOnSync = false;
+            var firstLoad = true;
+        </script>
+        <script src="location.js"></script> 
+    </body>
+
+    <body>
+        <ng-app></ng-app>
+        <div id="surveyResult"></div>
+
+        <script>
+            //<link rel="stylesheet" href="./index.css">
+            var res = "none"
+            updateIndicator()
+            updateNumberOfEnteries()
+            function zoneToggle(){
+                var checkbox = document.getElementById('checkZone');
+                if (checkbox.checked == true){
+                    document.getElementById('zone').style.display = 'none'
+                }
+                else{
+                    document.getElementById('zone').style.display = 'inline'
+                }
+            }
+
+
+            // adding scroll event
+            window.addEventListener('scroll', function(){
+                var st = window.pageYOffset || document.documentElement.scrollTop; // Credits: "https://github.com/qeremy/so/blob/master/so.dom.js#L426"
+                if (st > 800){
+                    // downscroll code
+                    if(latitude === "none" || longitude === "none"){
+                        document.body.scrollTop = document.documentElement.scrollTop = 0;
+                        alert("Please specify the location on map before scrolling")
+                    }
+                } else {
+                    // upscroll code
+                    if(reload){
+                        alert("Data is saved")
+                        reload = false;
+                    }
+                }
+                lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+                }, false);
+        </script>
+
+        
+        <script src="index.js"></script>
+
+       
+    </body>
+</html>
