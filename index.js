@@ -7,12 +7,6 @@ Survey
 
 var json = {
     "questions": [
-        {
-            "name": "name",
-            "type": "text",
-            "title": "Please enter your name:",
-            "isRequired": true
-        },
         {//Should this be a multiple thing or just one choice?
             //Put them in alphabetical order
             "type": "checkbox",
@@ -42,9 +36,9 @@ var json = {
             "type": "matrixdynamic",
             "name": "parkUsers",
             "title": "Please fill in data for each individual (Scroll horizontally)",
-            "addRowText": "Add Participant",
+            "addRowText": "Add More Participants",
             "minRowCount": 1,
-            //"allowAddRows": "shouldAllowRows({state})",
+            "allowAddRows": false,
             "horizontalScroll": true,
             "columnMinWidth": "245px",
             "columnColCount": 1,
@@ -116,7 +110,7 @@ var json = {
                         "title": "Activities",
                         "colCount": 1,
                         "choices": [
-                                        "Walking", "Walking Dog", "Buggy/Pram", "Off Road Cycling", "Leisure Cycling", "Sports", "Mansion", "Children's Playground", "Running", "Sitting", "Standing", "Skate Park", "Cafe", "Wheelchair/Mobility Scooter", "Other"
+                                    "Walking Dog","Walking", "Running", "Leisure Cycling", "Off Road Cycling", "BMX", "Skate Park", "Sports", "Swimming", "Children's Playground", "Buggy/Pram", "Standing", "Sitting", "Wheelchair/Mobility Scooter", "Cafe", "Other"
                                     ],
                         "isRequired": true
                     }
@@ -135,18 +129,45 @@ var json = {
 window.survey = new Survey.Model(json);
 survey.showCompletedPage = false;
 
-function shouldAllowRows(params){
-    console.log("Hello")
-    console.log(params)
-    if(params[0] === 'Alone')
-        return true
-    else
-        return false
+
+function resetParkUserRows(){
+    var numberOfRows = survey.getQuestionByName("parkUsers").visibleRows.length
+    for (var i = numberOfRows - 1; i > 0; i--){
+        survey.getQuestionByName("parkUsers").removeRow(i)
+    }
 }
-Survey
-    .FunctionFactory
-    .Instance
-    .register("shouldAllowRows", shouldAllowRows);
+
+
+survey.onMatrixRowAdded.add(function(sender, options){
+    if(!defaultInsertRow){
+        var question = options.row.cells[1].question; //The first cell is readOnly
+        setTimeout(function() {
+            question.focus()
+        }, 300);
+    }
+
+});
+
+survey
+    .onValueChanged
+    .add(function(sender, options) {
+        if(options.name !== "state"){return}
+        if(options.value === "Alone"){
+            defaultInsertRow = true
+            initialSetupQuestion2 = true;
+            resetParkUserRows();
+            survey.getQuestionByName("parkUsers").allowAddRows = false;
+        }
+        else{
+            survey.getQuestionByName("parkUsers").allowAddRows = true;
+            
+            if(initialSetupQuestion2){
+                survey.getQuestionByName("parkUsers").addRow();
+                defaultInsertRow = false;
+                initialSetupQuestion2 = false;
+            }
+        }
+});
 
 survey
     .onComplete
@@ -159,7 +180,13 @@ survey
         prevDateTime = "none"
         curDateTime = Date().toLocaleString()
         counter = 0
-        survey.clear()
+        defaultInsertRow = true;
+        initialSetupQuestion2 = true;
+        resetParkUserRows();
+        survey.getQuestionByName("parkUsers").allowAddRows = false;
+
+        survey.clear();
+
         document.body.scrollTop = document.documentElement.scrollTop = 0;
         //console.log(survey)
         d3.selectAll('#dot').remove()

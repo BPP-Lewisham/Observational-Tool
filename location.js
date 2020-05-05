@@ -1,4 +1,4 @@
-let SPREADSHEET = 'https://script.google.com/macros/s/AKfycbw5ADWCykTIJsyeVOox1V511CUzmoQlvbjfMMZZqtNxCiJy0NI/exec'
+let SPREADSHEET = 'https://script.google.com/macros/s/AKfycbyZxaXyLX5YdXpVtDPh8ioEy2PpuvGq35VJ5HWh9BMum15Ki6Q7/exec'
 var prevDateTime = "none"
 var curDateTime = "none"
 var counter = 0;
@@ -78,7 +78,7 @@ function sendData(){
 function updateNumberOfEnteries(){
     //console.log(window.localStorage.length.toString)
     var localStorageLength = window.localStorage.length
-    document.getElementById('toSync').innerHTML = "Enteries to be synced: ".concat(localStorageLength.toString());
+    document.getElementById('toSync').innerHTML = "Entries to be synced: ".concat(localStorageLength.toString());
     if (errorOnSync){
         errorOnSync = false
     }
@@ -163,7 +163,7 @@ function locationFinder(){
         .attr("id", "dot")
         .attr("cx", x)
         .attr("cy", y)
-        .attr("r", 1)
+        .attr("r", 3)
         .attr("fill", "red")
 
     latitude = (initial_latitude + (y * lat_scale))

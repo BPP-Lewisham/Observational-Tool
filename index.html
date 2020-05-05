@@ -20,10 +20,10 @@
             Disable Zone: <input type="checkbox" id="checkZone" onclick=zoneToggle()>
             <label id="status"style="margin-left: 25px">Connectivity</label>
             <div id="auth-status" style="display: inline; padding-left: 25px"></div><hr>
-            <label id="toSync"style="margin-left: 25px">Enteries to be synced: Loading</label>
+            <label id="toSync"style="margin-left: 25px">Entries to be synced: Loading</label>
             <button id="send-data-button"onclick="sendData()"style="margin-left: 25px">Sync</button>
             <div id="auth-status-2" style="display: inline; padding-left: 25px"></div><hr>
-            <input type="image" id="zone" src="zone.PNG" width="380" height="335">
+            <input type="image" id="zone" src="zone.jpg" width="380" height="335">
             <h2>Please click on the map below to select the location of the observed activity</h2>
             <p></p>
         </body>
@@ -38,6 +38,8 @@
             var lastScrollTop = 0;
             var errorOnSync = false;
             var firstLoad = true;
+            var defaultInsertRow = true;
+            var initialSetupQuestion2 = true;
         </script>
         <script src="location.js"></script> 
     </body>
@@ -65,7 +67,7 @@
             // adding scroll event
             window.addEventListener('scroll', function(){
                 var st = window.pageYOffset || document.documentElement.scrollTop; // Credits: "https://github.com/qeremy/so/blob/master/so.dom.js#L426"
-                if (st > 800){
+                if (st > 750){
                     // downscroll code
                     if(latitude === "none" || longitude === "none"){
                         document.body.scrollTop = document.documentElement.scrollTop = 0;
